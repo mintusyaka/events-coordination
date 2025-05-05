@@ -1,0 +1,40 @@
+﻿@page "{id:int}"
+@model events_coordination_frontend.Pages.Organizer.EditEventModel
+@{
+    ViewData["Title"] = "Редагувати подію";
+}
+<link rel="stylesheet" href="/css/volunteer.css" />
+
+<h2>Редагувати подію</h2>
+
+<form method="post">
+    <div>
+        <label>Назва події:</label>
+        <input asp-for="Event.Title" required />
+    </div>
+    <div>
+        <label>Опис:</label>
+        <textarea asp-for="Event.Description" rows="3"></textarea>
+    </div>
+    <div>
+        <label>Початкова дата:</label>
+        <input asp-for="Event.StartDate" type="date" required />
+    </div>
+    <div>
+        <label>Початковий час:</label>
+        <input asp-for="Event.StartTime" type="time" required />
+    </div>
+    <div>
+        <label>Кінцева дата:</label>
+        <input asp-for="Event.EndDate" type="date" required />
+    </div>
+    <div>
+        <label>Кінцевий час:</label>
+        <input asp-for="Event.EndTime" type="time" required />
+    </div>
+    <div>
+        <label>Місце проведення:</label>
+        <select asp-for="Event.VenueId" asp-items="Model.Venues" required></select>
+    </div>
+    <button type="submit" class="nav-btn">💾 Зберегти зміни</button>
+</form>

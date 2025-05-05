@@ -1,0 +1,68 @@
+﻿@page
+@model events_coordination_frontend.Pages.Sponsor.IndexModel
+@{
+    ViewData["Title"] = "Події для спонсорства";
+}
+
+<link rel="stylesheet" href="~/css/volunteer.css" />
+
+
+<h2>Доступні події для спонсорства</h2>
+
+<div style="margin-bottom: 1em;">
+    <a asp-page="/Sponsor/AppliedEvents"><button>📨 Подані заявки</button></a>
+    <a asp-page="/Sponsor/Calendar"><button>📋 Мої події</button></a>
+</div>
+
+<form method="get">
+    <label>Місто:</label>
+    <input type="text" name="City" value="@Model.City" />
+
+    <label>Дата (від):</label>
+    <input type="date" name="FromDate" value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+
+    <label>Дата (до):</label>
+    <input type="date" name="ToDate" value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+
+    <button type="submit">🔍 Фільтрувати</button>
+</form>
+
+@if (!Model.Events.Any())
+{
+    <p><i>Немає подій для спонсорства за заданими параметрами.</i></p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th>Місце</th>
+                <th>Дата</th>
+                <th colspan="2">Дія</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model.Events)
+            {
+                <tr>
+                    <td>@ev.Title</td>
+                    <td>@ev.Venue.City, @ev.Venue.Name</td>
+                    <td>@ev.StartDate.ToShortDateString()</td>
+                    <td colspan="2">
+                        <form method="post" asp-page-handler="Request" asp-route-eventId="@ev.EventId" style="display:flex; gap: 1em;">
+                            <select name="selectedSponsorshipId" required>
+                                <option disabled selected value="">Оберіть тип</option>
+                                @foreach (var type in Model.SponsorshipTypes)
+                                {
+                                    <option value="@type.Value">@type.Text</option>
+                                }
+                            </select>
+                            <button type="submit">📩 Подати заявку</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

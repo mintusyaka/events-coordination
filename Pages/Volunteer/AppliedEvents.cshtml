@@ -1,0 +1,42 @@
+﻿@page
+@model events_coordination_frontend.Pages.Volunteer.AppliedEventsModel
+@{
+    ViewData["Title"] = "Подані заявки";
+}
+
+<link rel="stylesheet" href="~/css/volunteer.css" />
+
+<h2>📨 Подані заявки на участь</h2>
+
+@if (!Model.AppliedEvents.Any())
+{
+    <p><i>Немає активних заявок.</i></p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Назва події</th>
+                <th>Місце</th>
+                <th>Дата</th>
+                <th>Дія</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model.AppliedEvents)
+            {
+                <tr>
+                    <td>@ev.Title</td>
+                    <td>@ev.Venue.City, @ev.Venue.Name</td>
+                    <td>@ev.StartDate.ToShortDateString()</td>
+                    <td>
+                        <form method="post" asp-page-handler="Cancel" asp-route-eventId="@ev.EventId">
+                            <button type="submit">❌ Скасувати заявку</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

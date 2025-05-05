@@ -1,0 +1,56 @@
+﻿@page
+@model events_coordination_frontend.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Реєстрація користувача";
+}
+
+<link rel="stylesheet" href="~/css/main.css" />
+
+<h2>Реєстрація нового користувача</h2>
+
+<form method="post">
+    <div>
+        <label>Ім'я:</label>
+        <input asp-for="Input.FirstName" required />
+    </div>
+    <div>
+        <label>Прізвище:</label>
+        <input asp-for="Input.LastName" required />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input asp-for="Input.Email" type="email" required />
+    </div>
+    <div>
+        <label>Телефон:</label>
+        <input asp-for="Input.Phone" required />
+    </div>
+    <div>
+        <label>Пароль:</label>
+        <input asp-for="Input.Password" type="password" required />
+    </div>
+    <div>
+        <label>Роль:</label>
+        <select asp-for="Input.Role" required>
+            <option value="">-- Оберіть роль --</option>
+            <option>Volunteer</option>
+            <option>Sponsor</option>
+            <option>Organizer</option>
+        </select>
+    </div>
+    <div>
+        <label>Організація (для Спонсора/Організатора):</label>
+        <input asp-for="Input.Organization" />
+    </div>
+    <button type="submit">Зареєструватися</button>
+</form>
+
+@if (Model.ErrorMessage != null)
+{
+    <p style="color:red">@Model.ErrorMessage</p>
+}
+
+<p>
+    Вже зареєстровані?
+    <a asp-page="/Login">Увійти</a>
+</p>

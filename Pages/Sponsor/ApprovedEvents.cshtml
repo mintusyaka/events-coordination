@@ -1,0 +1,36 @@
+﻿@page
+@model events_coordination_frontend.Pages.Sponsor.ApprovedEventsModel
+@{
+    ViewData["Title"] = "Підтверджені події";
+}
+
+<link rel="stylesheet" href="~/organizer-sponsor-style.css" />
+
+<h2>Підтверджені події</h2>
+
+@if (!Model.ApprovedEvents.Any())
+{
+    <p><i>Наразі немає підтверджених подій.</i></p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th>Місце</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model.ApprovedEvents)
+            {
+                <tr>
+                    <td>@ev.Title</td>
+                    <td>@ev.Venue.City, @ev.Venue.Name</td>
+                    <td>@ev.StartDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

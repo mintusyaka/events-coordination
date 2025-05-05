@@ -1,0 +1,43 @@
+﻿@page
+@model events_coordination_frontend.Pages.Organizer.CreateEventModel
+@{
+    ViewData["Title"] = "Створити подію";
+}
+
+<link rel="stylesheet" href="/css/volunteer.css" />
+
+<h2>Створити подію</h2>
+
+<form method="post">
+    <div>
+        <label>Назва події:</label>
+        <input asp-for="Event.Title" required />
+    </div>
+    <div>
+        <label>Опис:</label>
+        <textarea asp-for="Event.Description" rows="3"></textarea>
+    </div>
+    <div>
+        <div>
+            <label>Початкова дата:</label>
+            <input asp-for="Event.StartDate" type="date" required />
+        </div>
+        <div>
+            <label>Час:</label>
+            <input asp-for="Event.StartTime" type="time" required />
+        </div>
+        <div>
+            <label>Кінцева дата:</label>
+            <input asp-for="Event.EndDate" type="date" required />
+        </div>
+        <div>
+            <label>Час:</label>
+            <input asp-for="Event.EndTime" type="time" required />
+        </div>
+    </div>
+    <div>
+        <label>Місце проведення:</label>
+        <select asp-for="Event.VenueId" asp-items="Model.Venues" required></select>
+    </div>
+    <button type="submit">Створити</button>
+</form>

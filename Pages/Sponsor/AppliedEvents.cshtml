@@ -1,0 +1,44 @@
+﻿@page
+@model events_coordination_frontend.Pages.Sponsor.AppliedEventsModel
+@{
+    ViewData["Title"] = "Подані заявки";
+}
+
+<link rel="stylesheet" href="/css/volunteer.css" />
+
+<h2>📨 Подані заявки на спонсорство</h2>
+
+@if (!Model.RequestedEvents.Any())
+{
+    <p><i>У вас немає активних заявок.</i></p>
+}
+else
+{
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Назва події</th>
+                <th>Місце</th>
+                <th>Дата</th>
+                <th>Тип спонсорства</th>
+                <th>Дія</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var (ev, type) in Model.RequestedEvents)
+            {
+                <tr>
+                    <td>@ev.Title</td>
+                    <td>@ev.Venue.City, @ev.Venue.Name</td>
+                    <td>@ev.StartDate.ToShortDateString()</td>
+                    <td>@type</td>
+                    <td>
+                        <form method="post" asp-page-handler="Withdraw" asp-route-eventId="@ev.EventId" style="display:inline;">
+                            <button class="btn-outline">❌ Відхилити</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

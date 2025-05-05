@@ -1,0 +1,48 @@
+﻿@page
+@model events_coordination_frontend.Pages.Organizer.IndexModel
+@{
+    ViewData["Title"] = "Мої події";
+}
+
+<link rel="stylesheet" href="/css/volunteer.css" />
+
+<h2>Мої події</h2>
+
+<p>
+    <a asp-page="CreateEvent"><button class="nav-btn">➕ Створити подію</button></a>
+    <a asp-page="Calendar"><button class="nav-btn">📅 Календар</button></a>
+    <a asp-page="ManageVolunteerRequests"><button class="nav-btn">🙋 Волонтери</button></a>
+    <a asp-page="ManageSponsorRequests"><button class="nav-btn">💰 Спонсори</button></a>
+    <a asp-page="/Logout"><button class="danger-btn">🚪 Вийти</button></a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Дата</th>
+            <th>Місце</th>
+            <th>Статус</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Events)
+        {
+            <tr>
+                <td>@e.Title</td>
+                <td>@e.StartDate.ToShortDateString() - @e.EndDate.ToShortDateString()</td>
+                <td>@e.Venue?.Name</td>
+                <td>@e.Status</td>
+                <td>
+                    <a asp-page="EditEvent" asp-route-id="@e.EventId">Редагувати</a> |
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@e.EventId" style="display:inline">
+                        <button type="submit" onclick="return confirm('Ви впевнені, що хочете видалити цю подію?')">
+                            Видалити
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

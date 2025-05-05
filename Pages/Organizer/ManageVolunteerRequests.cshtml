@@ -1,0 +1,84 @@
+﻿@page
+@model events_coordination_frontend.Pages.Organizer.ManageVolunteerRequestsModel
+@{
+    ViewData["Title"] = "Заявки волонтерів";
+}
+
+<link rel="stylesheet" href="/css/volunteer.css" />
+
+
+<h2>Заявки волонтерів</h2>
+
+@if (!Model.VolunteersByEvent.Any())
+{
+    <p><i>Немає заявок на ваші події</i></p>
+}
+
+@foreach (var group in Model.VolunteersByEvent)
+{
+    <h3>Подія: @group.Key.Title (@group.Key.StartDate.ToShortDateString())</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Імʼя</th>
+                <th>Прізвище</th>
+                <th>Email</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var volunteer in group.Value)
+        {
+            <tr>
+                <td>@volunteer.FirstName</td>
+                <td>@volunteer.LastName</td>
+                <td>@volunteer.Email</td>
+                <td>
+                    <form method="post" asp-page-handler="Approve" asp-route-eventId="@group.Key.EventId" asp-route-userId="@volunteer.UserId">
+                        <button type="submit">✅ Підтвердити</button>
+                    </form>
+                    <form method="post" asp-page-handler="Reject" asp-route-eventId="@group.Key.EventId" asp-route-userId="@volunteer.UserId">
+                        <button type="submit">❌ Відхилити</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (Model.ApprovedVolunteersByEvent.Any())
+{
+    <h2>Підтверджені волонтери</h2>
+    @foreach (var group in Model.ApprovedVolunteersByEvent)
+    {
+        <h3>Подія: @group.Key.Title (@group.Key.StartDate.ToShortDateString())</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Імʼя</th>
+                    <th>Прізвище</th>
+                    <th>Email</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var volunteer in group.Value)
+            {
+                <tr>
+                    <td>@volunteer.FirstName</td>
+                    <td>@volunteer.LastName</td>
+                    <td>@volunteer.Email</td>
+                    <td>
+                        <form method="post" asp-page-handler="RemoveApproved" asp-route-eventId="@group.Key.EventId" asp-route-userId="@volunteer.UserId">
+                            <button type="submit">🗑 Видалити</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+}

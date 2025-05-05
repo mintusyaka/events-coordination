@@ -1,0 +1,34 @@
+﻿@page
+@model events_coordination_frontend.Pages.Volunteer.ApprovedEventsModel
+@{
+    ViewData["Title"] = "Заплановані події";
+}
+
+<h2>📅 Заплановані події</h2>
+
+@if (Model.ApprovedEvents.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th>Дата</th>
+                <th>Місце</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model.ApprovedEvents)
+            {
+                <tr>
+                    <td>@e.Title</td>
+                    <td>@e.StartDate.ToShortDateString()</td>
+                    <td>@e.Venue?.City</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><i>Наразі немає підтверджених подій</i></p>
+}

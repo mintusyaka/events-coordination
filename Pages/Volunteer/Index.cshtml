@@ -1,0 +1,60 @@
+﻿@page
+@model events_coordination_frontend.Pages.Volunteer.IndexModel
+@{
+    ViewData["Title"] = "Доступні події";
+}
+
+<link rel="stylesheet" href="~/css/volunteer.css" />
+
+<h2>📋 Події для участі</h2>
+
+<div style="margin-bottom: 1em;">
+    <a asp-page="/Volunteer/AppliedEvents"><button>📨 Подані заявки</button></a>
+    <a asp-page="/Volunteer/Calendar"><button>✅ Заплановані події</button></a>
+</div>
+
+<form method="get" style="margin-bottom: 1em;">
+    <label>Місто:</label>
+    <input type="text" name="City" value="@Model.City" />
+
+    <label>Дата (від):</label>
+    <input type="date" name="FromDate" value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+
+    <label>Дата (до):</label>
+    <input type="date" name="ToDate" value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+
+    <button type="submit">🔍 Фільтрувати</button>
+</form>
+
+@if (!Model.AvailableEvents.Any())
+{
+    <p><i>Немає доступних подій для участі.</i></p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th>Місце</th>
+                <th>Дата</th>
+                <th>Дія</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model.AvailableEvents)
+            {
+                <tr>
+                    <td>@ev.Title</td>
+                    <td>@ev.Venue.City, @ev.Venue.Name</td>
+                    <td>@ev.StartDate.ToShortDateString()</td>
+                    <td>
+                        <form method="post" asp-page-handler="Apply" asp-route-eventId="@ev.EventId">
+                            <button type="submit">📩 Подати заявку</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

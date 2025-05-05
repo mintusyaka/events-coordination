@@ -1,0 +1,76 @@
+﻿@page
+@model events_coordination_frontend.Pages.Organizer.CalendarModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Календар організатора";
+}
+
+<link rel="stylesheet" href="/css/calendar.css" />
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+
+
+<h2>Мої події</h2>
+
+<div id='calendar'></div>
+
+<!-- Модальне вікно -->
+<div id="eventModal">
+    <div id="eventModalContent">
+        <h3><span class="emoji">📌</span> <span id="modalTitle"></span></h3>
+        <div class="event-detail"><span class="emoji">🕒</span><span id="modalStart"></span></div>
+        <div class="event-detail"><span class="emoji">⏰</span><span id="modalEnd"></span></div>
+        <div class="event-detail"><span class="emoji">📝</span><span id="modalDescription"></span></div>
+        <div class="event-detail"><span class="emoji">🤝</span><span id="modalCounts"></span></div>
+
+        <div class="modal-actions">
+            <form id="deleteForm" method="post" asp-page-handler="Delete">
+                <input type="hidden" id="eventIdField" name="eventId" value="" />
+                <button type="submit" class="withdraw-btn">❌ Видалити подію</button>
+            </form>
+
+            <button class="close-btn" onclick="closeModal()">Закрити</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <script>
+        function closeModal() {
+            document.getElementById('eventModal').classList.remove('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'uk',
+                events: @Html.Raw(JsonSerializer.Serialize(Model.CalendarEvents)),
+                eventClick: function (info) {
+                    const start = new Date(info.event.start);
+                    const end = new Date(info.event.end);
+
+                    document.getElementById('eventIdField').value = info.event.extendedProps.eventId;
+                    document.getElementById('modalTitle').textContent = info.event.title;
+                    document.getElementById('modalStart').textContent =
+                        "Початок: " + start.toLocaleDateString('uk-UA') + " " + start.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                    document.getElementById('modalEnd').textContent =
+                        "Завершення: " + end.toLocaleDateString('uk-UA') + " " + end.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                    document.getElementById('modalDescription').textContent =
+                        info.event.extendedProps.description || "Опис відсутній";
+
+                    document.getElementById('modalCounts').textContent =
+                        "Спонсори: " + info.event.extendedProps.sponsorCount + " | Волонтери: " + info.event.extendedProps.volunteerCount;
+
+                    document.getElementById('eventModal').classList.add('show');
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+}
